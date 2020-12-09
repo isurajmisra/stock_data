@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Data</title>
+</head>
+<body>
+        <div class="ques">
+
+            <form method="POST" action="/get_data/">
+                {%csrf_token%}
+                <h3>
+                Select Your Index Symbol
+
+                </h3>
+                <select id="symbol" class="selectGrades form-control form-control-lg" name="symbol">
+                    <option value="BANKNIFTY" selected>BANKNIFTY</option>
+                    <option value="NIFTY">NIFTY</option>
+                </select>
+
+
+                <button type="submit" class="btn">Submit</button>
+            </form>
+
+        </div >
+
+        {%if symbol%}
+            <h1>Selected Symbol : {{symbol}}</h1>
+            <h3>Total difference in Change In Open Interest:{{diff_changeinOpenInterest}}</h3>
+            <h3>Call According to data : {{call}}</h3>
+            <h5>CE Change in Open Interest Sum : {{ce_sum}}</h5>
+            <h5>PE Change in Open Interest Sum : {{pe_sum}}</h5>
+
+            <h1>CE Data</h1>
+            {% autoescape off %}
+            {{ce_data}}
+            {% endautoescape %}
+            <h1>PE Data</h1>
+            {% autoescape off %}
+            {{pe_data}}
+            {% endautoescape %}
+        {%endif%}
+
+</body>
+</html>
