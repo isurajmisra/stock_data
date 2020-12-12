@@ -4,29 +4,47 @@
     <meta charset="UTF-8">
     <title>Stock Data</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      google.charts.load('current', {
+      callback: function () {
+        var chart = new google.visualization.AreaChart($('#chart').get(0));
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2004',  1000,      400],
-          ['2005',  1170,      460],
-          ['2006',  660,       1120],
-          ['2007',  1030,      540]
-        ]);
+        function drawChart() {
+          $.ajax({
+            url: '{% url 'get_intraday_data' %}',
+                    dataType: 'json',
+                  }).done(function (results) {
+                  console.log(results);
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('number', 'Time');
+                    data.addColumn('number', 'Difference');
 
-        var options = {
-          title: 'Company Performance',
-          curveType: 'function',
-          legend: { position: 'bottom' }
-        };
 
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                    $.each(results, function (i, row) {
+                      data.addRow([
+                        parseInt(row.time),
+                        row.diff,
 
-        chart.draw(data, options);
-      }
+                      ]);
+                    });
+
+                    chart.draw(data, {
+                      animation: {
+                        startup: true,
+                        duration: 1000
+                      },
+                      title: 'Intraday Data',
+                      curveType: 'function',
+                      displayAnnotations: true
+                    });
+                  });
+                }
+                drawChart();
+                setInterval(drawChart, 303000);
+              },
+              packages: ['corechart']
+            });
     </script>
 </head>
 <body>
@@ -65,6 +83,6 @@
             {{pe_data}}
             {% endautoescape %}
         {%endif%}
-<div id="curve_chart" style="width: 900px; height: 500px"></div>
+<div id="chart" style="width: 900px; height: 500px"></div>
 </body>
 </html>
