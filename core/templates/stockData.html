@@ -8,7 +8,7 @@
     <script type="text/javascript">
       google.charts.load('current', {
       callback: function () {
-        var chart = new google.visualization.AreaChart($('#chart').get(0));
+        var chart = new google.visualization.LineChart($('#chart').get(0));
 
         function drawChart() {
           $.ajax({
@@ -17,13 +17,13 @@
                   }).done(function (results) {
                   console.log(results);
                     var data = new google.visualization.DataTable();
-                    data.addColumn('number', 'Time');
+                    data.addColumn('string', 'Time');
                     data.addColumn('number', 'Difference');
 
 
                     $.each(results, function (i, row) {
                       data.addRow([
-                        parseInt(row.time),
+                        row.time,
                         row.diff,
 
                       ]);
@@ -66,7 +66,7 @@
             </form>
 
         </div >
-
+<div id="chart" style="width: auto; height: 500px"></div>
         {%if symbol%}
             <h1>Selected Symbol : {{symbol}}</h1>
             <h3>Total difference in Change In Open Interest:{{diff_changeinOpenInterest}}</h3>
@@ -83,6 +83,6 @@
             {{pe_data}}
             {% endautoescape %}
         {%endif%}
-<div id="chart" style="width: 900px; height: 500px"></div>
+
 </body>
 </html>

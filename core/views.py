@@ -8,7 +8,7 @@ from django.core.cache import cache
 import requests
 from django.shortcuts import render, redirect
 from requests.adapters import HTTPAdapter
-from nsetools import Nse
+
 import pandas as pd
 from urllib3 import Retry
 
@@ -128,6 +128,6 @@ def get_intraday_data(request):
     result = []
     intraday_data = IntradayData.objects.filter(time__date=today)
     for data in intraday_data:
-        result.append({'diff':data.diff,'time':data.time.time().strftime("%H.%M")})
+        result.append({'diff':data.diff,'time':data.time.time().strftime("%H:%M")})
 
     return JsonResponse(result, safe=False)

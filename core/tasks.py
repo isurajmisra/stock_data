@@ -1,9 +1,13 @@
+import json
+
+from django.shortcuts import redirect
+
 from core.views import get_option_data
 import datetime
 import sqlite3
 from celery.schedules import crontab
 from django.core.cache import cache
-from nsetools import Nse
+
 import pandas as pd
 from stock_data.settings import DATABASES
 from stock_data import celery_app
@@ -14,8 +18,26 @@ from .models import *
 @shared_task
 def save_stock_data():
     symbol = cache.get('symbol')
-    dajs = get_option_data(symbol)
+    print(symbol)
+    try:
+        i = True
+        max_retry = 100
+        j = 1
+        while (i):
+            page = get_option_data(symbol)
+            if page.status_code == 200:
+                i = False
+            elif j <= max_retry:
+                i = True
+                print(f"Trying to connect - {j}")
+                j += 1
+            else:
+                raise Exception
 
+    except Exception as e:
+        print(e)
+        return
+    dajs = json.loads(page.text)
     expiry_dt = dajs['records']['expiryDates'][0]
 
     ce_values = [data['CE'] for data in dajs['records']['data'] if "CE" in data and data['expiryDate'] == expiry_dt]
@@ -24,14 +46,7 @@ def save_stock_data():
 
     ce_df = pd.DataFrame(ce_values, columns=['changeinOpenInterest', 'strikePrice'])
     pe_df = pd.DataFrame(pe_values, columns=['changeinOpenInterest', 'strikePrice'])
-    engine = sqlite3.connect(DATABASES['default']['NAME'])
-
-    if symbol == "BANKNIFTY":
-        nse_symbol = "nifty bank"
-    elif symbol == "NIFTY":
-        nse_symbol = "nifty 50"
-    else:
-        nse_symbol = symbol
+    # engine = sqlite3.connect(DATABASES['default']['NAME'])
 
     ce_df['strikePrice'] = ce_df['strikePrice'].astype(int)
     index_quote_lastPrice = int(dajs['records']['underlyingValue'])
@@ -64,9 +79,7 @@ def save_stock_data():
     ce_dt['timestamp'] = date_time_obj
     pe_dt['timestamp'] = date_time_obj
 
-    # ce_dt.to_sql(name='ce_stock_data', con=engine, index=False, if_exists='append')
-    # pe_dt.to_sql(name='pe_stock_data', con=engine, index=False, if_exists='append' )
-    intraday_data = IntradayData.objects.create(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum, diff=diff_changeinOpenInterest, timestamp=date_time_obj, signal=call)
+    intraday_data = IntradayData.objects.create(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum, diff=diff_changeinOpenInterest, time=date_time_obj, signal=call)
     intraday_data.save()
     return "Taks Completed"
 
