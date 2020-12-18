@@ -45,12 +45,27 @@
               },
               packages: ['corechart']
             });
+            function get_data(){
+            $.ajax({
+                      url: '{% url 'api_get_data' %}',
+                    dataType: 'json',
+                  }).done(function (results) {
+                  console.log(results);
+                  $("#symbl").text(results.symbl);
+                  $("#diff").text(results.diff_changeinOpenInterest);
+                  $("#signal").text(results.call);
+                  $("#ce").text(results.ce_sum);
+                  $("#pe").text(results.pe_sum);
+                  }
+                  });
+
+                  }
     </script>
 </head>
 <body>
         <div class="ques">
 
-            <form method="POST" action="/get_data/">
+            <form >
                 {%csrf_token%}
                 <h3>
                 Select Your Index Symbol
@@ -62,17 +77,17 @@
                 </select>
 
 
-                <button type="submit" class="btn">Submit</button>
+                <button type="submit" class="btn" onclick="get_data">Submit</button>
             </form>
 
         </div >
 <div id="chart" style="width: auto; height: 500px"></div>
         {%if symbol%}
-            <h1>Selected Symbol : {{symbol}}</h1>
-            <h3>Total difference in Change In Open Interest:{{diff_changeinOpenInterest}}</h3>
-            <h3>Call According to data : {{call}}</h3>
-            <h5>CE Change in Open Interest Sum : {{ce_sum}}</h5>
-            <h5>PE Change in Open Interest Sum : {{pe_sum}}</h5>
+            <h1 id="symbl">Selected Symbol : {{symbol}}</h1>
+            <h3 id="diff">Total difference in Change In Open Interest:{{diff_changeinOpenInterest}}</h3>
+            <h3 id="signal">Call According to data : {{call}}</h3>
+            <h5 id="ce">CE Change in Open Interest Sum : {{ce_sum}}</h5>
+            <h5 id="pe">PE Change in Open Interest Sum : {{pe_sum}}</h5>
 
             <h1>CE Data</h1>
             {% autoescape off %}
