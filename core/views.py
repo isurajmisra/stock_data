@@ -34,11 +34,15 @@ def get_stock_data(request):
                     i = True
                     print(f"Trying to connect - {j}")
                     j += 1
-            dajs = json.loads(page.text)
+                else:
+                    raise Exception
+            
 
         except Exception as e:
             print(e)
             return redirect("get_data")
+
+        dajs = json.loads(page.text)
         expiry_dt = dajs['records']['expiryDates'][0]
 
         ce_values = [data['CE'] for data in dajs['records']['data'] if "CE" in data and data['expiryDate'] == expiry_dt]
