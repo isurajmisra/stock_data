@@ -65,6 +65,28 @@
 <script>
 function get_data()
     {
+        let symbol = $('select[name=symbol] option').filter(':selected').val();
+        let headers = {"Referer": `https://www.nseindia.com/get-quotes/derivatives?symbol=${symbol}`,
+               'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
+
+               "Accept - Language": "en - US, en;q = 0.9", "Accept-Encoding": "gzip, deflate, br"
+               }
+
+        $.ajax(
+                {
+                    url: `https://www.nseindia.com/api/option-chain-indices?symbol=${symbol}`,
+
+                    dataType: 'json',
+                    headers : `${headers}`,
+                    setCookies: {
+                                    "bm_sv": "F140DF14529DCBD46F41C0CA2BF24EE7~kbGVwkURJC0sZAK/dfkMMNdp+I5+fHncaM2faFXjIOis8SUGWPA/GL7or2MbB6YbioUNsFqm3nrGbRNslXEU7WSilb4gIqms3So5NhURNXUP9myu2XvCRZ3tTZ+zWzH5ID/z7AVtakwD4BwJlLTxGmikyK3IYlREFTfHDs+N42c="},
+                }
+            ).done(function (results)
+                {
+                      console.log(results);
+
+                });
+
         $.ajax(
                 {
                     url: '{% url 'api_get_data' %}',
