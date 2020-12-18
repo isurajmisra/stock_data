@@ -139,9 +139,10 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': 'VowDtS1vr4P1nyAIqi5DIbWQbUdAUmFG',
         }
     }
 }
