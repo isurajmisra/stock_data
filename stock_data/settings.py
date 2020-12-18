@@ -27,7 +27,7 @@ SECRET_KEY = 'u4=m763+76pq042a+^*58g1wj@xg%36)h+ze*d^=-&k#$g%-ai'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','autotrend.herokuapp.com']
 
 
 # Application definition
