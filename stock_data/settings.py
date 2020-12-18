@@ -129,8 +129,8 @@ LOGOUT_REDIRECT_URL = 'login'
 
 
 # CELERY STUFF
-BROKER_URL = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943''
-CELERY_RESULT_BACKEND = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943''
+BROKER_URL = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943'
+CELERY_RESULT_BACKEND = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
