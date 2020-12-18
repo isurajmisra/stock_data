@@ -45,28 +45,14 @@
               },
               packages: ['corechart']
             });
-            function get_data(){
-            $.ajax({
-                      url: '{% url 'api_get_data' %}',
-                    dataType: 'json',
-                  }).done(function (results) {
-                  console.log(results);
-                  $("#symbl").text(results.symbl);
-                  $("#diff").text(results.diff_changeinOpenInterest);
-                  $("#signal").text(results.call);
-                  $("#ce").text(results.ce_sum);
-                  $("#pe").text(results.pe_sum);
-                  }
-                  });
 
-                  }
     </script>
 </head>
 <body>
         <div class="ques">
 
             <form >
-                {%csrf_token%}
+
                 <h3>
                 Select Your Index Symbol
 
@@ -76,19 +62,41 @@
                     <option value="NIFTY">NIFTY</option>
                 </select>
 
+<script>
+function get_data()
+    {
+        $.ajax(
+                {
+                    url: '{% url 'api_get_data' %}',
+                    data: {
+                        "symbol": $('select[name=symbol] option').filter(':selected').val(),
 
-                <button type="submit" class="btn" onclick="get_data">Submit</button>
+                    },
+                    dataType: 'json',
+                }
+            ).done(function (results)
+                {
+                      console.log(results);
+                      $("#symbl").text(`Selected Symbol : ${results.symbol}`);
+                      $("#diff").text(`Total difference in Change In Open Interest: ${results.diff_changeinOpenInterest}`);
+                      $("#signal").text(`Call According to data : ${results.call}`);
+                      $("#ce").text(`CE Change in Open Interest Sum : ${results.ce_sum}`);
+                      $("#pe").text(`PE Change in Open Interest Sum : ${results.pe_sum}`);
+                });
+    }
+</script>
+
             </form>
-
+<button class="btn" onclick="get_data()">Submit</button>
         </div >
 <div id="chart" style="width: auto; height: 500px"></div>
-        {%if symbol%}
-            <h1 id="symbl">Selected Symbol : {{symbol}}</h1>
-            <h3 id="diff">Total difference in Change In Open Interest:{{diff_changeinOpenInterest}}</h3>
-            <h3 id="signal">Call According to data : {{call}}</h3>
-            <h5 id="ce">CE Change in Open Interest Sum : {{ce_sum}}</h5>
-            <h5 id="pe">PE Change in Open Interest Sum : {{pe_sum}}</h5>
 
+            <h1 id="symbl"></h1>
+            <h3 id="diff"></h3>
+            <h3 id="signal"></h3>
+            <h5 id="ce"></h5>
+            <h5 id="pe"></h5>
+ {%if symbol%}
             <h1>CE Data</h1>
             {% autoescape off %}
             {{ce_data}}

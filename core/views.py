@@ -126,10 +126,10 @@ def get_option_data(symbol):
     return page
 def api_get_data(request):
 
-    symbol = cache.get('symbol')
+    symbol = request.GET.get('symbol') or "BANKNIFTY"
+    print(symbol)
 
     try:
-        # page = get_option_data(symbol)
         i = True
         j = 1
         max_retries = 200
@@ -158,12 +158,7 @@ def api_get_data(request):
 
     ce_df = pd.DataFrame(ce_values, columns=['changeinOpenInterest', 'strikePrice'])
     pe_df = pd.DataFrame(pe_values, columns=['changeinOpenInterest', 'strikePrice'])
-    # engine = sqlite3.connect(DATABASES['default']['NAME'])
 
-    # if symbol == "BANKNIFTY":
-    #     nse_symbol = "nifty bank"
-    # elif symbol == "NIFTY":
-    #     nse_symbol = "nifty 50"
 
     ce_df['strikePrice'] = ce_df['strikePrice'].astype(int)
     index_quote_lastPrice = int(dajs['records']['underlyingValue'])
@@ -204,10 +199,9 @@ def api_get_data(request):
 
     # ce_dt.to_sql(name='ce_stock_data', con=engine, index=False, if_exists='append')
     # pe_dt.to_sql(name='pe_stock_data', con=engine, index=False, if_exists='append' )
-    context = {"symbol": symbol, "call": call, "ce_data": ce_dt.to_html(classes='table table-striped'),
-               "pe_data": pe_dt.to_html(classes='table table-striped'),
-               "diff_changeinOpenInterest": diff_changeinOpenInterest, "ce_sum": ce_changeInOpenInterest_sum,
-               "pe_sum": pe_changeInOpenInterest_sum}
+    context = {"symbol": symbol, "call": call,
+               "diff_changeinOpenInterest": str(diff_changeinOpenInterest), "ce_sum": str(ce_changeInOpenInterest_sum),
+               "pe_sum": str(pe_changeInOpenInterest_sum)}
 
 
     return JsonResponse(context, safe=False)
