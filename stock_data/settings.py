@@ -129,8 +129,8 @@ LOGOUT_REDIRECT_URL = 'login'
 
 
 # CELERY STUFF
-BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+BROKER_URL = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943''
+CELERY_RESULT_BACKEND = 'redis-17943.c233.eu-west-1-1.ec2.cloud.redislabs.com:17943''
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -146,13 +146,3 @@ CACHES = {
         }
     }
 }
-
-# Other Celery settings
-# CELERY_BEAT_SCHEDULE = {
-#     'task-number-one': {
-#         'task': 'core.tasks.save_stock_data',
-#         'schedule': crontab(hour="10,11,12,13,14,15,16,17", minute="*/15", day_of_week="2,3,4,5,6"),
-#
-#     },
-# }
-
