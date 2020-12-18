@@ -25,11 +25,12 @@ def get_stock_data(request):
             # page = get_option_data(symbol)
             i = True
             j = 1
+            max_retries = 200
             while (i):
                 page = get_option_data(symbol)
                 if page.status_code == 200:
                     i = False
-                else:
+                elif j <= max_retries:
                     i = True
                     print(f"Trying to connect - {j}")
                     j += 1
