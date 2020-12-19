@@ -98,13 +98,13 @@ def get_option_data(symbol):
 
     with requests.Session() as s:
     #retry = Retry(connect=3, backoff_factor=0.5)
-    #adapter = HTTPAdapter(max_retries=retry)
+        adapter = HTTPAdapter(max_retries=5)
     #s.mount('http://', adapter)
-    #s.mount('https://', adapter)
+        s.mount('https://www.nseindia.com/', adapter)
     #for cookie in cookie_dict:
         #s.cookies.set(cookie, cookie_dict[cookie])
 
-        page = s.get(new_url, headers=headers,cookies=cookie_dict)
+        page = s.get(new_url, headers=headers,cookies=cookie_dict, timeout=3)
 
     return page
 
@@ -114,25 +114,27 @@ def api_get_data(request):
     print(symbol)
 
     try:
-        i = True
-        j = 1
-        max_retries = 20
-        while (i):
-            page = get_option_data(symbol)
-            if page.status_code == 200:
-                i = False
-            elif j <= max_retries:
-                i = True
-                time.sleep(1.5)
-                print(f"Trying to connect - {j}")
-                j += 1
-            else:
-                raise Exception
+        page = get_option_data(symbol)
+        #i = True
+        #j = 1
+       # max_retries = 20
+        #while (i):
+            #page = get_option_data(symbol)
+           # if page.status_code == 200:
+             #   i = False
+            #elif j <= max_retries:
+             #   i = True
+              #  time.sleep(1.5)
+              #  print(f"Trying to connect - {j}")
+              #  j += 1
+           # else:
+                #raise Exception
 
 
     except Exception as e:
         print(e)
-        return
+        context = {}
+        return JsonResponse(context, safe=False)
 
     dajs = json.loads(page.text)
     expiry_dt = dajs['records']['expiryDates'][0]
