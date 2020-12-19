@@ -91,9 +91,9 @@ def get_option_data(symbol):
     referer = f"https://www.nseindia.com/get-quotes/derivatives?symbol={symbol}"
     cookie_dict = {
         "bm_sv": "F140DF14529DCBD46F41C0CA2BF24EE7~kbGVwkURJC0sZAK/dfkMMNdp+I5+fHncaM2faFXjIOis8SUGWPA/GL7or2MbB6YbioUNsFqm3nrGbRNslXEU7WSilb4gIqms3So5NhURNXUP9myu2XvCRZ3tTZ+zWzH5ID/z7AVtakwD4BwJlLTxGmikyK3IYlREFTfHDs+N42c="}
-    headers = {"Referer": referer,
-               'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
-               "Accept - Language": "en - US, en;q = 0.9", "Accept-Encoding": "gzip, deflate, br"
+    headers = {"referer": referer,
+               'user-agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
+               "accept-language": "en-US,en;q=0.9", "accept-encoding": "gzip,deflate,br"
                }
 
     s = requests.Session()
