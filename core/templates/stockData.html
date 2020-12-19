@@ -19,6 +19,9 @@
           $.ajax({
             url: '{% url 'get_intraday_data' %}',
                     dataType: 'json',
+                    data: {
+                             "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                            },
                   }).done(function (results) {
                   console.log(results);
                     var data = new google.visualization.DataTable();

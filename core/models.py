@@ -24,6 +24,7 @@ class PEStockData(models.Model):
         db_table = 'pe_stock_data'
 
 class IntradayData(models.Model):
+    symbol = models.CharField(max_length=50, blank=False, null=True)
     call = models.IntegerField(null=True, blank=True) #sum of all change in open interest for call option
     put = models.IntegerField(null=True, blank=True)  # sum of all change in open interest for put option
     diff = models.IntegerField(null=True, blank=True) # diff of call and put
