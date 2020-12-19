@@ -10,7 +10,8 @@ import pandas as pd
 from urllib3 import Retry
 from .models import IntradayData
 
-
+def home(request):
+    return render(request, 'stockData.html')
 
 def get_stock_data(request):
     # if request.method == "POST":
@@ -32,7 +33,7 @@ def get_stock_data(request):
                     j += 1
                 else:
                     raise Exception
-            
+
 
         except Exception as e:
             print(e)
@@ -130,7 +131,7 @@ def api_get_data(request):
 
     except Exception as e:
         print(e)
-        return redirect("get_data")
+        return
 
     dajs = json.loads(page.text)
     expiry_dt = dajs['records']['expiryDates'][0]
@@ -182,9 +183,12 @@ def api_get_data(request):
                "ce_data":ce_dt.to_html(classes='table table-striped'),
                "pe_data":pe_dt.to_html(classes='table table-striped')
                }
-    intraday_data = IntradayData.objects.create(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum,
-                                                diff=diff_changeinOpenInterest, time=date_time_obj, signal=call)
-    intraday_data.save()
+    dat_time_date = date_time_obj.date()
+    today = datetime.date.today()
+    if today == dat_time_date:
+        intraday_data = IntradayData.objects.create(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum,
+                                                    diff=diff_changeinOpenInterest, time=date_time_obj, signal=call)
+        intraday_data.save()
 
     return JsonResponse(context, safe=False)
 
