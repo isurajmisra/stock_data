@@ -105,7 +105,7 @@ def get_option_data(symbol):
     for cookie in cookie_dict:
         s.cookies.set(cookie, cookie_dict[cookie])
 
-    page = s.get(new_url, headers=headers)
+    page = requests.get(new_url, headers=headers)
 
     return page
 
