@@ -1,16 +1,8 @@
 import json
-
-from django.shortcuts import redirect
-
-from core.views import get_option_data
+from .views import get_option_data
 import datetime
-import sqlite3
-from celery.schedules import crontab
 from django.core.cache import cache
-
 import pandas as pd
-from stock_data.settings import DATABASES
-from stock_data import celery_app
 from celery import shared_task
 from .models import *
 
@@ -46,7 +38,6 @@ def save_stock_data():
 
     ce_df = pd.DataFrame(ce_values, columns=['changeinOpenInterest', 'strikePrice'])
     pe_df = pd.DataFrame(pe_values, columns=['changeinOpenInterest', 'strikePrice'])
-    # engine = sqlite3.connect(DATABASES['default']['NAME'])
 
     ce_df['strikePrice'] = ce_df['strikePrice'].astype(int)
     index_quote_lastPrice = int(dajs['records']['underlyingValue'])

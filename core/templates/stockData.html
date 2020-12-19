@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <title>Stock Data</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+
       google.charts.load('current', {
       callback: function () {
         var chart = new google.visualization.LineChart($('#chart').get(0));
@@ -49,85 +53,158 @@
     </script>
 </head>
 <body>
-        <div class="ques">
+    <script>
+    /*
+        function get_data()
+            {
+                let symbol = $('select[name=symbol] option').filter(':selected').val();
+                let headers = {"Referer": `https://www.nseindia.com/get-quotes/derivatives?symbol=${symbol}`,
+                       'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
 
-            <form >
+                       "Accept - Language": "en - US, en;q = 0.9", "Accept-Encoding": "gzip, deflate, br"
+                       }
 
-                <h3>
-                Select Your Index Symbol
+                $.ajax(
+                        {
+                            url: `https://www.nseindia.com/api/option-chain-indices?symbol=${symbol}`,
 
-                </h3>
-                <select id="symbol" class="selectGrades form-control form-control-lg" name="symbol">
+                            dataType: 'json',
+                            headers : `${headers}`,
+                            setCookies: {
+                                            "bm_sv": "F140DF14529DCBD46F41C0CA2BF24EE7~kbGVwkURJC0sZAK/dfkMMNdp+I5+fHncaM2faFXjIOis8SUGWPA/GL7or2MbB6YbioUNsFqm3nrGbRNslXEU7WSilb4gIqms3So5NhURNXUP9myu2XvCRZ3tTZ+zWzH5ID/z7AVtakwD4BwJlLTxGmikyK3IYlREFTfHDs+N42c="},
+                        }
+                    ).done(function (results)
+                        {
+                              console.log(results);
+
+                        });
+
+                $.ajax(
+                        {
+                            url: '{% url 'api_get_data' %}',
+                            data: {
+                                "symbol": $('select[name=symbol] option').filter(':selected').val(),
+
+                            },
+                            dataType: 'json',
+                        }
+                    ).done(function (results)
+                        {
+                              console.log(results);
+                              $("#symbl").text(`Selected Symbol : ${results.symbol}`);
+                              $("#diff").text(`Total difference in Change In Open Interest: ${results.diff_changeinOpenInterest}`);
+                              $("#signal").text(`Call According to data : ${results.call}`);
+                              $("#ce").text(`CE Change in Open Interest Sum : ${results.ce_sum}`);
+                              $("#pe").text(`PE Change in Open Interest Sum : ${results.pe_sum}`);
+                              $("table tbody#table-row").append("<tr>
+                                                      <th scope="row">2</th>
+                                                      <td>Jacob</td>
+                                                      <td>Thornton</td>
+                                                      </tr>");
+                        });
+            }
+            */
+            let lineNo = 1;
+            function my_function(){
+                $.ajax(
+                        {
+                            url: '{% url 'api_get_data' %}',
+                            data: {
+                                    "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                                   },
+                            dataType: 'json',
+                        }
+                    ).done(function (results)
+                        {
+                              console.log(results);
+
+                              $("table tbody#table-row").append(`<tr>
+                                                                      <th scope="row">${lineNo}</th>
+                                                                      <td>${results.ce_sum}</td>
+                                                                      <td>${results.pe_sum}</td>
+                                                                      <td>${results.diff_changeinOpenInterest}</td>
+                                                                      <td>${results.time}</td>
+                                                                      <td>${results.call}</td>
+                                                                 </tr>`);
+                               lineNo++;
+                });
+
+            };
+            my_function();
+            setInterval(my_function,180000);
+    </script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="#">Stock Data</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{%url 'home'%}">Home <span class="sr-only">(current)</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <br>
+    <div class="container">
+
+        <form class="form-inline" method="get" action="{%url 'get_data'%}">
+            <div  class="form-group">
+                <label for="symbol">Select Your Index Symbol :</label>
+
+                <select id="symbol" class="custom-select ml-2" name="symbol">
                     <option value="BANKNIFTY" selected>BANKNIFTY</option>
                     <option value="NIFTY">NIFTY</option>
                 </select>
+            </div>
 
-<script>
-function get_data()
-    {
-        let symbol = $('select[name=symbol] option').filter(':selected').val();
-        let headers = {"Referer": `https://www.nseindia.com/get-quotes/derivatives?symbol=${symbol}`,
-               'User-Agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
+            <button type="submit" class="btn btn-primary ml-2" >Submit</button>
+        </form>
+         <br>
+        <table class="table">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>CE</th>
+                <th>PE</th>
+                <th>Diff</th>
+                <th>Time</th>
+                <th>Signal</th>
+            </tr>
+          </thead>
+          <tbody id="table-row">
+          </tbody>
+        </table>
+<!--        <div >-->
+<!--            <h5 id="symbl">Selected Symbol : {{symbol}}</h5>-->
+<!--            <h5 id="diff">Total difference in Change In Open Interest: {{diff_changeinOpenInterest}}</h5>-->
+<!--            <h5 id="signal">Signal According to data : {{call}}</h5>-->
+<!--            <h5 id="ce">CE Change in Open Interest Sum : {{ce_sum}}</h5>-->
+<!--            <h5 id="pe">PE Change in Open Interest Sum : {{pe_sum}}</h5>-->
+<!--        </div>-->
+        <div id="chart" style="width: auto; height: 500px"></div>
 
-               "Accept - Language": "en - US, en;q = 0.9", "Accept-Encoding": "gzip, deflate, br"
-               }
 
-        $.ajax(
-                {
-                    url: `https://www.nseindia.com/api/option-chain-indices?symbol=${symbol}`,
 
-                    dataType: 'json',
-                    headers : `${headers}`,
-                    setCookies: {
-                                    "bm_sv": "F140DF14529DCBD46F41C0CA2BF24EE7~kbGVwkURJC0sZAK/dfkMMNdp+I5+fHncaM2faFXjIOis8SUGWPA/GL7or2MbB6YbioUNsFqm3nrGbRNslXEU7WSilb4gIqms3So5NhURNXUP9myu2XvCRZ3tTZ+zWzH5ID/z7AVtakwD4BwJlLTxGmikyK3IYlREFTfHDs+N42c="},
-                }
-            ).done(function (results)
-                {
-                      console.log(results);
 
-                });
-
-        $.ajax(
-                {
-                    url: '{% url 'api_get_data' %}',
-                    data: {
-                        "symbol": $('select[name=symbol] option').filter(':selected').val(),
-
-                    },
-                    dataType: 'json',
-                }
-            ).done(function (results)
-                {
-                      console.log(results);
-                      $("#symbl").text(`Selected Symbol : ${results.symbol}`);
-                      $("#diff").text(`Total difference in Change In Open Interest: ${results.diff_changeinOpenInterest}`);
-                      $("#signal").text(`Call According to data : ${results.call}`);
-                      $("#ce").text(`CE Change in Open Interest Sum : ${results.ce_sum}`);
-                      $("#pe").text(`PE Change in Open Interest Sum : ${results.pe_sum}`);
-                });
-    }
-</script>
-
-            </form>
-<button class="btn" onclick="get_data()">Submit</button>
-        </div >
-<div id="chart" style="width: auto; height: 500px"></div>
-
-            <h1 id="symbl"></h1>
-            <h3 id="diff"></h3>
-            <h3 id="signal"></h3>
-            <h5 id="ce"></h5>
-            <h5 id="pe"></h5>
- {%if symbol%}
-            <h1>CE Data</h1>
-            {% autoescape off %}
+     {%if symbol%}
+        <h1>CE Data</h1>
+        {% autoescape off %}
+        <div class="table">
             {{ce_data}}
-            {% endautoescape %}
-            <h1>PE Data</h1>
-            {% autoescape off %}
+        </div>
+        {% endautoescape %}
+        <h1>PE Data</h1>
+        {% autoescape off %}
+        <div class="table">
             {{pe_data}}
-            {% endautoescape %}
-        {%endif%}
-
+        </div>
+        {% endautoescape %}
+    {%endif%}
+  </div>
 </body>
 </html>
