@@ -179,7 +179,7 @@ def api_get_data(request):
                "diff_changeinOpenInterest": str(diff_changeinOpenInterest),
                "ce_sum": str(ce_changeInOpenInterest_sum),
                "pe_sum": str(pe_changeInOpenInterest_sum),
-               "time": date_time_obj,
+               "time": date_time_obj.time().strftime("%H:%M:%S"),
                "ce_data":ce_dt.to_html(classes='table table-striped'),
                "pe_data":pe_dt.to_html(classes='table table-striped')
                }

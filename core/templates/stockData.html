@@ -104,6 +104,8 @@
                         });
             }
             */
+            var now = new Date(Date.now());
+            var formatted = now.getHours() + ":" + now.getMinutes();
             let lineNo = 1;
             $(document).ready(function () {
 
@@ -111,6 +113,7 @@
               e.preventDefault();
                 function my_function(){
                      $("h5#data-loader").text("Fetching data please wait......");
+                     let t = "";
                     $.ajax(
                             {
                                 url: '{% url 'api_get_data' %}',
@@ -132,17 +135,23 @@
                                    $("div.ce-table").html(results.ce_data);
                                    $("div.pe-table").html(results.pe_data);
                                    lineNo++;
+                                   t = results.time
+                                   if(t>"09:30:00" && t<"15:30:00"){
+                                        setInterval(my_function,3000);
+                                        }
+
                                 },
                                 error: function(results){
                                 $("h5#data-loader").text("There is some error occurred.");
                                 }
                             });
 
+
                 };
 
 
                 my_function();
-                setInterval(my_function,180000);
+
             });
 });
     </script>
