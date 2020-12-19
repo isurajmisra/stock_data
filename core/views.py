@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import datetime
 import json
+import time
 from django.core.cache import cache
 import requests
 from django.shortcuts import render, redirect
@@ -123,6 +124,7 @@ def api_get_data(request):
                 i = False
             elif j <= max_retries:
                 i = True
+                time.sleep(1.5)
                 print(f"Trying to connect - {j}")
                 j += 1
             else:
