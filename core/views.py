@@ -116,7 +116,7 @@ def api_get_data(request):
     try:
         i = True
         j = 1
-        max_retries = 100
+        max_retries = 20
         while (i):
             page = get_option_data(symbol)
             if page.status_code == 200:
