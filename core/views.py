@@ -178,7 +178,9 @@ def api_get_data(request):
                "diff_changeinOpenInterest": str(diff_changeinOpenInterest),
                "ce_sum": str(ce_changeInOpenInterest_sum),
                "pe_sum": str(pe_changeInOpenInterest_sum),
-               "time": date_time_obj
+               "time": date_time_obj,
+               "ce_data":ce_dt.to_html(classes='table table-striped'),
+               "pe_data":pe_dt.to_html(classes='table table-striped')
                }
     intraday_data = IntradayData.objects.create(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum,
                                                 diff=diff_changeinOpenInterest, time=date_time_obj, signal=call)

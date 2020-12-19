@@ -126,6 +126,8 @@
                                                                       <td>${results.time}</td>
                                                                       <td>${results.call}</td>
                                                                  </tr>`);
+                               $("div.ce-table").html(results.ce_data);
+                               $("div.pe-table").html(results.pe_data);
                                lineNo++;
                 });
 
@@ -189,22 +191,18 @@
         <div id="chart" style="width: auto; height: 500px"></div>
 
 
-
-
-     {%if symbol%}
         <h1>CE Data</h1>
-        {% autoescape off %}
-        <div class="table">
-            {{ce_data}}
+
+        <div class="ce-table">
+
         </div>
-        {% endautoescape %}
+
         <h1>PE Data</h1>
-        {% autoescape off %}
-        <div class="table">
-            {{pe_data}}
+
+        <div class="pe-table">
+
         </div>
-        {% endautoescape %}
-    {%endif%}
+
   </div>
 </body>
 </html>
