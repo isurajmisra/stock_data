@@ -2,6 +2,34 @@
 {% load static %}
 {% block main %}
 <script>
+$(document).ready(function () {
+$.ajax(
+                {
+                    url: '{% url 'api_get_data' %}',
+                    data: {
+                            "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                           },
+                    dataType: 'json',
+                    success: function(results){
+                    console.log(results);
+                      $("h5#data-loader").text("");
+                      $.each(results, function (i, row) {
+                      $("table tbody#table-row").append(`<tr>
+                                                              <th scope="row">${i}</th>
+                                                              <td>${row.call}</td>
+                                                              <td>${row.put}</td>
+                                                              <td>${row.diff}</td>
+                                                              <td>${row.time}</td>
+                                                              <td>${row.signal}</td>
+                                                         </tr>`);});
+
+                    },
+                    error: function(results){
+                    $("h5#data-loader").text("There is some error occurred.");
+                    }
+                });
+
+
 google.charts.load('current', {
             callback: function () {
             var chart = new google.visualization.LineChart($('#chart').get(0));
@@ -54,6 +82,27 @@ google.charts.load('current', {
                   },
                   packages: ['corechart']
                 });
+   });
+
+
 </script>
+<div class="container">
+    <br>
+        <table class="table">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>CE</th>
+                <th>PE</th>
+                <th>Diff</th>
+                <th>Time</th>
+                <th>Signal</th>
+            </tr>
+          </thead>
+          <tbody id="table-row">
+          </tbody>
+        </table>
+</div>
+    <br>
 <div id="chart" ></div>
 {% endblock %}

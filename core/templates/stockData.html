@@ -14,7 +14,7 @@ $(document).ready(function () {
   e.preventDefault();
     function my_function(){
          $("h5#data-loader").text("Fetching data please wait......");
-         let t = "";
+
         $.ajax(
                 {
                     url: '{% url 'api_get_data' %}',
@@ -25,19 +25,17 @@ $(document).ready(function () {
                     success: function(results){
                     console.log(results);
                       $("h5#data-loader").text("");
+                      $.each(results, function (i, row) {
                       $("table tbody#table-row").append(`<tr>
-                                                              <th scope="row">${lineNo}</th>
-                                                              <td>${results.ce_sum}</td>
-                                                              <td>${results.pe_sum}</td>
-                                                              <td>${results.diff_changeinOpenInterest}</td>
-                                                              <td>${results.time}</td>
-                                                              <td>${results.call}</td>
-                                                         </tr>`);
-                       $("div.ce-table").html(results.ce_data);
-                       $("div.pe-table").html(results.pe_data);
-                       lineNo++;
-                       t = results.time
-
+                                                              <th scope="row">${i}</th>
+                                                              <td>${row.call}</td>
+                                                              <td>${row.put}</td>
+                                                              <td>${row.diff}</td>
+                                                              <td>${row.time}</td>
+                                                              <td>${row.signal}</td>
+                                                         </tr>`);});
+                       //$("div.ce-table").html(results.ce_data);
+                       //$("div.pe-table").html(results.pe_data);
 
                     },
                     error: function(results){
@@ -156,17 +154,17 @@ $(document).ready(function () {
         <div id="chart" ></div>
 
 
-        <h1>CE Data</h1>
+<!--        <h1>CE Data</h1>-->
 
-        <div class="ce-table">
+<!--        <div class="ce-table">-->
 
-        </div>
+<!--        </div>-->
 
-        <h1>PE Data</h1>
+<!--        <h1>PE Data</h1>-->
 
-        <div class="pe-table">
+<!--        <div class="pe-table">-->
 
-        </div>
+<!--        </div>-->
 
   </div>
 {% endblock %}

@@ -41,7 +41,11 @@ def api_get_data(request):
     print(symbol)
 
     try:
-        page = get_option_data(symbol)
+        ti = datetime.datetime.now().strftime("%H:%M")
+        if  ti> "09:30" and ti < "16:30":
+            page = get_option_data(symbol)
+        else:
+            pass
     except Exception as e:
         print(e)
         context = {}
@@ -88,17 +92,26 @@ def api_get_data(request):
     date_time_obj = datetime.datetime.strptime(dajs['records']['timestamp'], '%d-%b-%Y %H:%M:%S')
     ce_dt['timestamp'] = date_time_obj
     pe_dt['timestamp'] = date_time_obj
-
-    context = {"symbol": symbol, "call": call,
-               "diff_changeinOpenInterest": str(diff_changeinOpenInterest),
-               "ce_sum": str(ce_changeInOpenInterest_sum),
-               "pe_sum": str(pe_changeInOpenInterest_sum),
-               "time": date_time_obj.time().strftime("%H:%M:%S"),
-               "ce_data":ce_dt.to_html(classes='table table-striped'),
-               "pe_data":pe_dt.to_html(classes='table table-striped')
-               }
-    dat_time_date = date_time_obj.date()
     today = datetime.date.today()
+    result = []
+    intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
+    for data in intraday_data:
+        result.append({"symbol": data.symbol, "signal": data.signal,
+               "diff": str(data.diff),
+               "call": str(data.call),
+               "put": str(data.put),
+               "time": data.time
+               })
+    # context = {"symbol": symbol, "call": call,
+    #            "diff_changeinOpenInterest": str(diff_changeinOpenInterest),
+    #            "ce_sum": str(ce_changeInOpenInterest_sum),
+    #            "pe_sum": str(pe_changeInOpenInterest_sum),
+    #            "time": date_time_obj.time().strftime("%H:%M:%S"),
+    #            "ce_data":ce_dt.to_html(classes='table table-striped'),
+    #            "pe_data":pe_dt.to_html(classes='table table-striped')
+    #            }
+    dat_time_date = date_time_obj.date()
+
     if today == dat_time_date:
         if IntradayData.objects.filter(time=date_time_obj).first() is None:
 
@@ -106,7 +119,7 @@ def api_get_data(request):
                                                     diff=diff_changeinOpenInterest, time=date_time_obj, signal=call)
             intraday_data.save()
 
-    return JsonResponse(context, safe=False)
+    return JsonResponse(result, safe=False)
 
 
 
