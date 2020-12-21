@@ -203,6 +203,6 @@ def get_intraday_data(request):
     result = []
     intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
     for data in intraday_data:
-        result.append({'diff':data.diff,'time':data.time.time().strftime("%H:%M")})
+        result.append({'diff':data.diff,'time':data.time})
 
     return JsonResponse(result, safe=False)

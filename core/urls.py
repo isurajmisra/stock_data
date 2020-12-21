@@ -1,3 +1,4 @@
+
 from django.urls import path
 
 from . import views
@@ -10,4 +11,5 @@ urlpatterns = [
     path('api/api_get_data/', views.api_get_data, name="api_get_data"),
 
 ]
+
 
