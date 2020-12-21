@@ -2,14 +2,15 @@
 {% load static %}
 {% block main %}
 <script>
-    var now = new Date(Date.now());
-var formatted = now.getHours() + ":" + now.getMinutes();
-var t =  now.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false })
-console.log(t);
+
+
 let lineNo = 1;
 $(document).ready(function () {
 
   $('#button').click(function (e) {
+    var now = new Date(Date.now());
+    var t =  now.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false })
+    console.log(t);
   e.preventDefault();
     function my_function(){
          $("h5#data-loader").text("Fetching data please wait......");
@@ -43,7 +44,15 @@ $(document).ready(function () {
                     $("h5#data-loader").text("There is some error occurred.");
                     }
                 });
-google.charts.load('current', {
+                function sleep(milliseconds) {
+                  const date = Date.now();
+                  let currentDate = null;
+                  do {
+                    currentDate = Date.now();
+                  } while (currentDate - date < milliseconds);
+                }
+                sleep(2000);
+            google.charts.load('current', {
             callback: function () {
             var chart = new google.visualization.LineChart($('#chart').get(0));
             function convertDate(date) {
@@ -65,7 +74,7 @@ google.charts.load('current', {
 
 
                         $.each(results, function (i, row) {
-                        //let ti =  convertDate(row.time);
+
                           data.addRow([
                              new Date(row.time.slice(0, -1)),
                             row.diff,
@@ -73,14 +82,14 @@ google.charts.load('current', {
                           ]);
                         });
                         var options = {
-                            title    : 'Index Stock: NSE',
-                            width    : 1400,
-                            height   : 540,
+                            title    : 'NSE Stock: Index Option Chain Data',
+                            width    : 1200,
+                            height   : 600,
                             legend   : 'true',
-                             pointSize: 5,
+                             pointSize: 2,
                             vAxis: { title: 'Price Diff (INR)', },
                             hAxis: { title: 'Time of day (Hours:Minutes)', format: 'HH:mm', gridlines: {count:15}, curveType: 'function',
-                                    lineWidth: 4,
+                                    lineWidth: 5,
                                     intervals: { 'style':'line' },}
                                     };
                             console.log("data---",data);
@@ -98,7 +107,6 @@ google.charts.load('current', {
 
     };
 
-    console.log(formatted);
     if(t>"09:30" && t<"15:30"){
 
         my_function();
@@ -145,7 +153,7 @@ google.charts.load('current', {
           </tbody>
         </table>
 
-        <div id="chart" style="width: auto; height: 500px"></div>
+        <div id="chart" ></div>
 
 
         <h1>CE Data</h1>

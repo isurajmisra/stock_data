@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block main %}
+<script>
+google.charts.load('current', {
+            callback: function () {
+            var chart = new google.visualization.LineChart($('#chart').get(0));
+            function convertDate(date) {
+                                var momentDate = moment(date).format('hh : mm A');
+                                return momentDate;
+                        }
+            function drawChart() {
+              $.ajax({
+                url: '{% url 'get_intraday_data' %}',
+                        dataType: 'json',
+                        data: {
+                                 "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                                },
+                      }).done(function (results) {
+                      console.log(results);
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('datetime', 'Time');
+                        data.addColumn('number', 'Difference');
+
+
+                        $.each(results, function (i, row) {
+
+                          data.addRow([
+                             new Date(row.time.slice(0, -1)),
+                            row.diff,
+
+                          ]);
+                        });
+                        var options = {
+                            title    : 'NSE Stock: Index Option Chain Data',
+                            width    : 1400,
+                            height   : 600,
+                            legend   : 'true',
+                             pointSize: 2,
+                            vAxis: { title: 'Price Diff (INR)', },
+                            hAxis: { title: 'Time of day (Hours:Minutes)', format: 'HH:mm', gridlines: {count:15}, curveType: 'function',
+                                    lineWidth: 5,
+                                    intervals: { 'style':'line' },}
+                                    };
+                            console.log("data---",data);
+                            chart.draw(data, options);
+                            });
+                        }
+
+
+                        drawChart();
+
+
+                  },
+                  packages: ['corechart']
+                });
+</script>
+<div id="chart" ></div>
+{% endblock %}
