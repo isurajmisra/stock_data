@@ -13,6 +13,7 @@ $.ajax(
                     success: function(results){
                     console.log(results);
                       $("h5#data-loader").text("");
+                      $("table tbody#table-row").html("");
                       $.each(results, function (i, row) {
                       $("table tbody#table-row").append(`<tr>
                                                               <th scope="row">${i}</th>

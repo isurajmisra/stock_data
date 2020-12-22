@@ -13,6 +13,7 @@ from .models import IntradayData
 
 def home(request):
     IntradayData.objects.filter(time__lte=datetime.datetime.now() - datetime.timedelta(days=1)).delete()
+    print("data deleted.")
     return render(request, 'stockData.html')
 
 def get_chart(request):
@@ -42,14 +43,14 @@ def api_get_data(request):
     today = datetime.date.today()
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
-        if  ti> "09:30" and ti < "16:30":
+        if  ti> "09:15" and ti < "16:30":
             page = get_option_data(symbol)
         else:
             pass
     except Exception as e:
         print(e)
         context = {}
-        return JsonResponse(context, safe=False)
+        # return JsonResponse(context, safe=False)
     try:
         dajs = json.loads(page.text)
         expiry_dt = dajs['records']['expiryDates'][0]
@@ -104,15 +105,15 @@ def api_get_data(request):
     except Exception:
         print(Exception)
 
-        result = []
-        intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
-        for data in intraday_data:
-            result.append({"symbol": data.symbol, "signal": data.signal,
-                   "diff": str(data.diff),
-                   "call": str(data.call),
-                   "put": str(data.put),
-                   "time": data.time
-                   })
+    result = []
+    intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
+    for data in intraday_data:
+        result.append({"symbol": data.symbol, "signal": data.signal,
+               "diff": str(data.diff),
+               "call": str(data.call),
+               "put": str(data.put),
+               "time": data.time
+               })
     # context = {"symbol": symbol, "call": call,
     #            "diff_changeinOpenInterest": str(diff_changeinOpenInterest),
     #            "ce_sum": str(ce_changeInOpenInterest_sum),

@@ -25,6 +25,7 @@ $(document).ready(function () {
                     success: function(results){
                     console.log(results);
                       $("h5#data-loader").text("");
+                      $("table tbody#table-row").html("");
                       $.each(results, function (i, row) {
                       $("table tbody#table-row").append(`<tr>
                                                               <th scope="row">${i}</th>
@@ -105,7 +106,7 @@ $(document).ready(function () {
 
     };
 
-    if(t>"09:30" && t<"15:30"){
+    if(t>"09:15" && t<"15:30"){
 
         my_function();
 
