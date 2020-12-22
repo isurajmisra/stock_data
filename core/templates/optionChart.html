@@ -3,14 +3,15 @@
 {% block main %}
 <script>
 $(document).ready(function () {
-$.ajax(
-                {
-                    url: '{% url 'api_get_data' %}',
-                    data: {
-                            "symbol": $('select[name=symbol] option').filter(':selected').val(),
-                           },
-                    dataType: 'json',
-                    success: function(results){
+$('#button').click(function (e) {
+e.preventDefault();
+        $.ajax({
+                url: '{% url 'api_get_data' %}',
+                data: {
+                        "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                       },
+                dataType: 'json',
+                success: function(results){
                     console.log(results);
                       $("h5#data-loader").text("");
                       $("table tbody#table-row").html("");
@@ -25,9 +26,9 @@ $.ajax(
                                                          </tr>`);});
 
                     },
-                    error: function(results){
-                    $("h5#data-loader").text("There is some error occurred.");
-                    }
+                error: function(results){
+                $("h5#data-loader").text("There is some error occurred.");
+                }
                 });
 
 
@@ -84,10 +85,22 @@ google.charts.load('current', {
                   packages: ['corechart']
                 });
    });
-
+});
 
 </script>
 <div class="container">
+     <form id="symbol-select" class="form-inline">
+            <div  class="form-group">
+                <label for="symbol">Select Your Index Symbol :</label>
+
+                <select id="symbol" class="custom-select ml-2" name="symbol">
+                    <option value="BANKNIFTY" selected>BANKNIFTY</option>
+                    <option value="NIFTY">NIFTY</option>
+                </select>
+            </div>
+
+            <button type="submit" id="button"  class="btn btn-primary ml-2">Submit</button>
+        </form>s
     <br>
         <table class="table">
           <thead>
