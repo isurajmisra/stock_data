@@ -4,6 +4,7 @@ import json
 import time
 from django.core.cache import cache
 import requests
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from requests.adapters import HTTPAdapter
 from django.http import JsonResponse
@@ -32,8 +33,7 @@ def get_option_data(symbol):
     with requests.Session() as s:
         adapter = HTTPAdapter(max_retries=5)
         s.mount('https://www.nseindia.com/', adapter)
-        page = s.get(new_url, headers=headers,cookies=cookie_dict, timeout=3)
-
+        page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=3)
     return page
 
 def api_get_data(request):
@@ -45,8 +45,7 @@ def api_get_data(request):
         ti = datetime.datetime.now().strftime("%H:%M")
         if  ti> "09:15" and ti < "16:30":
             page = get_option_data(symbol)
-        else:
-            pass
+
     except Exception as e:
         print(e)
         context = {}
@@ -96,7 +95,7 @@ def api_get_data(request):
         dat_time_date = date_time_obj.date()
 
         if today == dat_time_date:
-            if IntradayData.objects.filter(time=date_time_obj).first() is None:
+            if IntradayData.objects.filter(Q(time=date_time_obj)|Q(call=ce_changeInOpenInterest_sum, put=pe_changeInOpenInterest_sum, diff=diff_changeinOpenInterest)).first() is None:
                 intraday_data = IntradayData.objects.create(symbol=symbol, call=ce_changeInOpenInterest_sum,
                                                             put=pe_changeInOpenInterest_sum,
                                                             diff=diff_changeinOpenInterest, time=date_time_obj,
