@@ -33,7 +33,7 @@ def get_option_data(symbol):
     with requests.Session() as s:
         adapter = HTTPAdapter(max_retries=5)
         s.mount('https://www.nseindia.com/', adapter)
-        page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=3)
+        page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=5)
     return page
 
 def api_get_data(request):
@@ -41,9 +41,11 @@ def api_get_data(request):
     symbol = request.GET.get('symbol') or "BANKNIFTY"
     print(symbol)
     today = datetime.date.today()
+    days_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ]
+    day_name = datetime.date.today().strftime("%A")
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
-        if  ti> "09:15" and ti < "16:30":
+        if  ti> "09:15" and ti < "16:30" and day_name in days_list:
             page = get_option_data(symbol)
 
     except Exception as e:
