@@ -74,9 +74,12 @@ def api_get_data(request):
         pr2 = pe_df_sort[0] + 8
         ce_dt = ce_df[cr1:cr2]
         pe_dt = pe_df[pr1:pr2]
-
-        ce_dt['changeinOpenInterest'] = ce_dt['changeinOpenInterest'].astype(int) * 25
-        pe_dt['changeinOpenInterest'] = pe_dt['changeinOpenInterest'].astype(int) * 25
+        if symbol == 'BANKNIFTY':
+            multiplier = 25
+        elif symbol == 'NIFTY':
+            multiplier = 75
+        ce_dt['changeinOpenInterest'] = ce_dt['changeinOpenInterest'].astype(int) * multiplier
+        pe_dt['changeinOpenInterest'] = pe_dt['changeinOpenInterest'].astype(int) * multiplier
         ce_dt['strikePrice'] = ce_dt['strikePrice'].astype(int)
         pe_dt['strikePrice'] = pe_dt['strikePrice'].astype(int)
         ce_changeInOpenInterest_sum = ce_dt['changeinOpenInterest'].sum()
