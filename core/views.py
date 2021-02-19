@@ -46,8 +46,11 @@ def api_get_data(request):
     day_name = datetime.date.today().strftime("%A")
     print(day_name)
     try:
-        ti = datetime.datetime.now().strftime("%H:%M")
-        if  ti> "09:15" and ti < "16:30" and day_name in days_list:
+        if DEBUG:
+            ti = datetime.datetime.now().strftime("%H:%M")
+        else:
+            ti = datetime.datetime.now().strftime("%H:%M") + "06:11"
+        if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
             page = get_option_data(symbol)
 
     except Exception as e:
@@ -108,8 +111,8 @@ def api_get_data(request):
                                                             diff=diff_changeinOpenInterest, time=date_time_obj,
                                                             signal=call)
                 intraday_data.save()
-    except Exception:
-        print(Exception)
+    except Exception as e:
+        print(e)
 
     result = []
     intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
