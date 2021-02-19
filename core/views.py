@@ -41,8 +41,10 @@ def api_get_data(request):
     symbol = request.GET.get('symbol') or "BANKNIFTY"
     print(symbol)
     today = datetime.date.today()
+    print(today)
     days_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ]
     day_name = datetime.date.today().strftime("%A")
+    print(day_name)
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
         if  ti> "09:15" and ti < "16:30" and day_name in days_list:
@@ -135,6 +137,7 @@ def api_get_data(request):
 def get_intraday_data(request):
     symbol = request.GET.get('symbol') or "BANKNIFTY"
     today = datetime.date.today()
+    print(today)
     result = []
     intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
     for data in intraday_data:
