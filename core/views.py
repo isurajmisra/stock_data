@@ -47,7 +47,7 @@ def api_get_data(request):
     day_name = datetime.date.today().strftime("%A")
     print(day_name)
     try:
-        if request['META']['HTTP_HOST'] == '127.0.0.1:8000':
+        if request.META['HTTP_HOST'] == '127.0.0.1:8000':
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
