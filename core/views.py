@@ -12,7 +12,7 @@ import pandas as pd
 from urllib3 import Retry
 from .models import IntradayData
 from stock_data.settings import DEBUG
-
+from datetime import timedelta
 
 def home(request):
     IntradayData.objects.filter(time__lte=datetime.datetime.now() - datetime.timedelta(days=1)).delete()
@@ -51,8 +51,8 @@ def api_get_data(request):
         if DEBUG:
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
-            ti = datetime.datetime.now().strftime("%H:%M") + "06:11"
-
+            ti = datetime.datetime.now() + timedelta(hours=6, minutes=11)
+            ti = ti.strftime("%H:%M")
         print(ti)
         if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
             page = get_option_data(symbol)
