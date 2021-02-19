@@ -50,6 +50,7 @@ def api_get_data(request):
         if request.META['HTTP_HOST'] == '127.0.0.1:8000':
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
+            request.META['HTTP_HOST'] = '127.0.0.1:8000'
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
             ti = ti.strftime("%H:%M")
         print(ti)
