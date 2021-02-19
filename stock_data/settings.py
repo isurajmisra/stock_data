@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'u4=m763+76pq042a+^*58g1wj@xg%36)h+ze*d^=-&k#$g%-ai'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','autotrend.herokuapp.com']
 

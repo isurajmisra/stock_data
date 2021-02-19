@@ -11,7 +11,7 @@ from django.http import JsonResponse
 import pandas as pd
 from urllib3 import Retry
 from .models import IntradayData
-from ..stock_data.settings import DEBUG
+from stock_data.settings import DEBUG
 
 
 def home(request):
