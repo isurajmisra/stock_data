@@ -50,6 +50,8 @@ def api_get_data(request):
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
             ti = datetime.datetime.now().strftime("%H:%M") + "06:11"
+
+        print(ti)
         if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
             page = get_option_data(symbol)
 
