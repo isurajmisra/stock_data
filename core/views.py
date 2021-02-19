@@ -51,7 +51,7 @@ def api_get_data(request):
         if DEBUG:
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
-            ti = datetime.datetime.now() + timedelta(hours=6, minutes=11)
+            ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
             ti = ti.strftime("%H:%M")
         print(ti)
         if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
