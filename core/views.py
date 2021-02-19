@@ -11,7 +11,6 @@ from django.http import JsonResponse
 import pandas as pd
 from urllib3 import Retry
 from .models import IntradayData
-from stock_data.settings import DEBUG
 from datetime import timedelta
 
 def home(request):
@@ -48,7 +47,7 @@ def api_get_data(request):
     day_name = datetime.date.today().strftime("%A")
     print(day_name)
     try:
-        if DEBUG:
+        if request['META']['HTTP_HOST'] == '127.0.0.1:8000':
             ti = datetime.datetime.now().strftime("%H:%M")
         else:
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
