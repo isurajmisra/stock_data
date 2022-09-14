@@ -36,21 +36,20 @@ cookies = dict()
 def set_cookie():
     request = sess.get(url_oc, headers=headers, timeout=5)
     cookies = dict(request.cookies)
+    return cookies
 
 def get_option_data(symbol):
     print("Inside get option :"+ symbol)
     if symbol=="NIFTY":
-        response = sess.get(url_oc, headers=headers, timeout=5, cookies=cookies)
+        response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==401):
-            set_cookie()
-            response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
+            response = sess.get(url_nf, headers=headers, timeout=5, cookies=set_cookie())
         if(response.status_code==200):
             return response
     else:
-       response = sess.get(url_oc, headers=headers, timeout=5, cookies=cookies)
+       response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
        if(response.status_code==401):
-           set_cookie()
-           response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
+           response = sess.get(url_bnf, headers=headers, timeout=5, cookies=set_cookie())
        if(response.status_code==200):
            return response
     print("Inside get option function")
