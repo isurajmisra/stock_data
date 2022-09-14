@@ -81,7 +81,9 @@ def api_get_data(request):
             ti = ti.strftime("%H:%M")
         print(ti)
         if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
+            print("Inside if block")
             page = get_option_data(symbol)
+            print(page)
 
     except Exception as e:
         print(e)
