@@ -39,14 +39,14 @@ def set_cookie():
 
 def get_option_data(symbol):
     if symbol=="NIFTY":
-        response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+        response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==401):
             set_cookie()
             response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==200):
             return response
     else:
-       response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+       response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
        if(response.status_code==401):
            set_cookie()
            response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
