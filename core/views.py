@@ -43,13 +43,9 @@ def get_option_data(symbol):
     print("Inside get option :"+ symbol)
     if symbol=="NIFTY":
         response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
-        if(response.status_code==200):
-            return response
-    
     else:
         response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
-        if(response.status_code==200):
-            return response
+
     print("Inside get option function")
     print(response)
     return response
