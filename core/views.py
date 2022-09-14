@@ -52,6 +52,7 @@ def get_option_data(symbol):
            response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
        if(response.status_code==200):
            return response
+    return response
         
 #     with requests.Session() as s:
 #         adapter = HTTPAdapter(max_retries=5)
