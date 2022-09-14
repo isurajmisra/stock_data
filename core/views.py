@@ -45,19 +45,19 @@ def get_option_data(symbol):
             response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==200):
             return response
-     else:
-        response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
-        if(response.status_code==401):
-            set_cookie()
-            response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
-        if(response.status_code==200):
-            return response
+    else:
+       response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+       if(response.status_code==401):
+           set_cookie()
+           response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
+       if(response.status_code==200):
+           return response
         
 #     with requests.Session() as s:
 #         adapter = HTTPAdapter(max_retries=5)
 #         s.mount('https://www.nseindia.com/', adapter)
 #         page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=5)
-        
+#     return page
         
     
     
