@@ -21,21 +21,46 @@ def home(request):
 def get_chart(request):
     return render(request, 'optionChart.html')
 
+# Urls for fetching Data
+url_oc      = "https://www.nseindia.com/option-chain"
+url_bnf     = 'https://www.nseindia.com/api/option-chain-indices?symbol=BANKNIFTY'
+url_nf      = 'https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY'
+url_indices = "https://www.nseindia.com/api/allIndices"
+
+# Headers
+headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
+            'accept-language': 'en,gu;q=0.9,hi;q=0.8',
+            'accept-encoding': 'gzip, deflate, br'}
+sess = requests.Session()
+cookies = dict()
+def set_cookie():
+    request = sess.get(url_oc, headers=headers, timeout=5)
+    cookies = dict(request.cookies)
 
 def get_option_data(symbol):
-    new_url = f'https://www.nseindia.com/api/option-chain-indices?symbol={symbol}'
-    referer = f"https://www.nseindia.com/get-quotes/derivatives?symbol={symbol}"
-    cookie_dict = dict(bm_sv= "F140DF14529DCBD46F41C0CA2BF24EE7~kbGVwkURJC0sZAK/dfkMMNdp+I5+fHncaM2faFXjIOis8SUGWPA/GL7or2MbB6YbioUNsFqm3nrGbRNslXEU7WSilb4gIqms3So5NhURNXUP9myu2XvCRZ3tTZ+zWzH5ID/z7AVtakwD4BwJlLTxGmikyK3IYlREFTfHDs+N42c=")
-    headers = {
-               'user-agent': "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
-               "accept-language": "en-US,en;q=0.9", "accept-encoding": "gzip,deflate,br"
-               }
-
-    with requests.Session() as s:
-        adapter = HTTPAdapter(max_retries=5)
-        s.mount('https://www.nseindia.com/', adapter)
-        page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=5)
-    return page
+    if symbol=="NIFTY":
+        response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+        if(response.status_code==401):
+            set_cookie()
+            response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
+        if(response.status_code==200):
+            return response
+     else:
+        response = sess.get(url, headers=headers, timeout=5, cookies=cookies)
+        if(response.status_code==401):
+            set_cookie()
+            response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
+        if(response.status_code==200):
+            return response
+        
+#     with requests.Session() as s:
+#         adapter = HTTPAdapter(max_retries=5)
+#         s.mount('https://www.nseindia.com/', adapter)
+#         page = s.get(new_url, headers=headers, cookies=cookie_dict, timeout=5)
+        
+        
+    
+    
 
 def api_get_data(request):
 
