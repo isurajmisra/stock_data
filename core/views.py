@@ -38,6 +38,7 @@ def set_cookie():
     cookies = dict(request.cookies)
 
 def get_option_data(symbol):
+    print("Inside get option :"+ symbol)
     if symbol=="NIFTY":
         response = sess.get(url_oc, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==401):
