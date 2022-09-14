@@ -39,19 +39,21 @@ def set_cookie():
 
 def get_option_data(symbol):
     if symbol=="NIFTY":
-        response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
+        response = sess.get(url_oc, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==401):
             set_cookie()
             response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
         if(response.status_code==200):
             return response
     else:
-       response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
+       response = sess.get(url_oc, headers=headers, timeout=5, cookies=cookies)
        if(response.status_code==401):
            set_cookie()
            response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
        if(response.status_code==200):
            return response
+    print("Inside get option function")
+    print(response)
     return response
         
 #     with requests.Session() as s:
@@ -81,9 +83,7 @@ def api_get_data(request):
             ti = ti.strftime("%H:%M")
         print(ti)
         if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
-            print("Inside if block")
             page = get_option_data(symbol)
-            print(page)
 
     except Exception as e:
         print(e)
@@ -91,6 +91,7 @@ def api_get_data(request):
         # return JsonResponse(context, safe=False)
     try:
         dajs = json.loads(page.text)
+        print("After calling try")
         expiry_dt = dajs['records']['expiryDates'][0]
 
         ce_values = [data['CE'] for data in dajs['records']['data'] if "CE" in data and data['expiryDate'] == expiry_dt]
