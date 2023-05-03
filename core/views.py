@@ -28,29 +28,24 @@ url_nf      = 'https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY'
 url_indices = "https://www.nseindia.com/api/allIndices"
 
 # Headers
-headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
-            'accept-language': 'en,gu;q=0.9,hi;q=0.8',
-            'accept-encoding': 'gzip, deflate, br'}
+headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, '
+                         'like Gecko) '
+                         'Chrome/80.0.3987.149 Safari/537.36',
+           'accept-language': 'en,gu;q=0.9,hi;q=0.8', 'accept-encoding': 'gzip, deflate, br'}
 sess = requests.Session()
-cookies = dict()
+
 def set_cookie():
-    print('inside set cookies 1')
     request = sess.get(url_oc, headers=headers, timeout=5)
-    print('inside set cookies 2')
-    print(request)  
     cookies = dict(request.cookies)
-    print(cookies)
+    return cookies
+
+cookies = set_cookie()
 
 def get_option_data(symbol):
-    set_cookie()
-    print("Inside get option :"+ symbol)
     if symbol=="NIFTY":
         response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
     else:
         response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
-
-    print("Inside get option function")
-    print(response)
     return response
        
     
@@ -82,7 +77,6 @@ def api_get_data(request):
         # return JsonResponse(context, safe=False)
     try:
         dajs = json.loads(page.text)
-        print("After calling try")
         expiry_dt = dajs['records']['expiryDates'][0]
 
         ce_values = [data['CE'] for data in dajs['records']['data'] if "CE" in data and data['expiryDate'] == expiry_dt]
