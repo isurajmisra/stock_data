@@ -16,7 +16,7 @@ django-redis==4.12.1
 django-timezone-field==4.1.1
 idna==2.10
 kombu==5.0.2
-numpy==1.18
+numpy==1.19.4
 pandas==1.1.5
 prompt-toolkit==3.0.8
 py==1.9.0
