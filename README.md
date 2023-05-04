@@ -1,2 +1,2 @@
 # stock_data
-Web App to give Buy and Sell signal based on open intrest change.
+Stock Data is simple web application for option trading. It will give signals for option buyer by analyzing change in open interest. .
