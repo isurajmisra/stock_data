@@ -60,15 +60,17 @@ def api_get_data(request):
     days_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ]
     day_name = datetime.date.today().strftime("%A")
     print(day_name)
+    
     try:
-        if request.META['HTTP_HOST'] == '127.0.0.1:8000':
-            ti = datetime.datetime.now().strftime("%H:%M")
-        else:
+        ti = datetime.datetime.now().strftime("%H:%M")
+        if request.META['HTTP_HOST'] != '127.0.0.1:8000':
             request.META['HTTP_HOST'] = '127.0.0.1:8000'
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
-            ti = ti.strftime("%H:%M")
-        print(ti)
-        if  ti > "09:15" and ti  < "16:30" and day_name in days_list:
+
+        today9_30am = ti.replace(hour=9, minute=15)
+        today4_30am = ti.replace(hour=16, minute=30)
+        
+        if  ti > today9_30am and ti  < today4_30am and day_name in days_list:
             page = get_option_data(symbol)
 
     except Exception as e:
