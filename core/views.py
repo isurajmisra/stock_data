@@ -102,7 +102,7 @@ def api_get_data(request):
         if symbol == 'BANKNIFTY':
             multiplier = 25
         elif symbol == 'NIFTY':
-            multiplier = 75
+            multiplier = 50
         ce_dt['changeinOpenInterest'] = ce_dt['changeinOpenInterest'].astype(int) * multiplier
         pe_dt['changeinOpenInterest'] = pe_dt['changeinOpenInterest'].astype(int) * multiplier
         ce_dt['strikePrice'] = ce_dt['strikePrice'].astype(int)
