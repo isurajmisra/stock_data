@@ -164,7 +164,7 @@ def get_intraday_data(request):
     today = datetime.date.today()
     print(today)
     result = []
-    intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today)
+    intraday_data = IntradayData.objects.filter(symbol=symbol, time__date=today).order_by('-id')[:10][::-1]
     for data in intraday_data:
         result.append({'diff':data.diff,'time':data.time})
 
