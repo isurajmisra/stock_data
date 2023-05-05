@@ -56,10 +56,8 @@ def api_get_data(request):
     symbol = request.GET.get('symbol') or "BANKNIFTY"
     print(symbol)
     today = datetime.date.today()
-    print(today)
     days_list = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ]
     day_name = datetime.date.today().strftime("%A")
-    print(day_name)
     
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
@@ -103,14 +101,17 @@ def api_get_data(request):
             multiplier = 25
         elif symbol == 'NIFTY':
             multiplier = 50
+            
+        print(f"CE Option Chain :\n {ce_dt}")
+        print("-----------------------------------------------------")
+        print(f"PE Option Chain :\n {pe_dt}")
+        
         ce_dt['changeinOpenInterest'] = ce_dt['changeinOpenInterest'].astype(int) * multiplier
         pe_dt['changeinOpenInterest'] = pe_dt['changeinOpenInterest'].astype(int) * multiplier
         ce_dt['strikePrice'] = ce_dt['strikePrice'].astype(int)
         pe_dt['strikePrice'] = pe_dt['strikePrice'].astype(int)
         ce_changeInOpenInterest_sum = ce_dt['changeinOpenInterest'].sum()
         pe_changeInOpenInterest_sum = pe_dt['changeinOpenInterest'].sum()
-        print(f"CE Option Chain : {ce_dt['changeinOpenInterest']}")
-        print(f"PE Option Chain : {pe_dt['changeinOpenInterest']}")
         diff_changeinOpenInterest = pe_changeInOpenInterest_sum - ce_changeInOpenInterest_sum
 
         if diff_changeinOpenInterest > 1000000:
@@ -120,7 +121,6 @@ def api_get_data(request):
         else:
             call = "Neutral"
 
-        print(dajs['records']['timestamp'])
         date_time_obj = datetime.datetime.strptime(dajs['records']['timestamp'], '%d-%b-%Y %H:%M:%S')
         ce_dt['timestamp'] = date_time_obj
         pe_dt['timestamp'] = date_time_obj
