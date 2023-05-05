@@ -109,6 +109,8 @@ def api_get_data(request):
         pe_dt['strikePrice'] = pe_dt['strikePrice'].astype(int)
         ce_changeInOpenInterest_sum = ce_dt['changeinOpenInterest'].sum()
         pe_changeInOpenInterest_sum = pe_dt['changeinOpenInterest'].sum()
+        print(f"CE Option Chain : {ce_dt['changeinOpenInterest']}")
+        print(f"PE Option Chain : {pe_dt['changeinOpenInterest']}")
         diff_changeinOpenInterest = pe_changeInOpenInterest_sum - ce_changeInOpenInterest_sum
 
         if diff_changeinOpenInterest > 1000000:
