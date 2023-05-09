@@ -35,15 +35,15 @@ url_bnf     = 'https://www.nseindia.com/api/option-chain-indices?symbol=BANKNIFT
 url_nf      = 'https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY'
 url_indices = "https://www.nseindia.com/api/allIndices"
 
-# Headers
+# Headers Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
 headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, '
                          'like Gecko) '
-                         'Chrome/80.0.3987.149 Safari/537.36',
-           'accept-language': 'en,gu;q=0.9,hi;q=0.8', 'accept-encoding': 'gzip, deflate, br'}
+                         'Chrome/12.0.0.0 Safari/537.36',
+           'accept-language': 'en;q=0.9, 'accept-encoding': 'gzip, deflate, br'}
 sess = requests.Session()
 
 def set_cookie():
-    request = sess.get(url_oc, headers=headers, timeout=10)
+    request = sess.get(url_oc, headers=headers, timeout=5)
     cookies = dict(request.cookies)
     return cookies
 
@@ -51,9 +51,9 @@ cookies = set_cookie()
 
 def get_option_data(symbol):
     if symbol=="NIFTY":
-        response = sess.get(url_nf, headers=headers, timeout=10, cookies=cookies)
+        response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
     else:
-        response = sess.get(url_bnf, headers=headers, timeout=10, cookies=cookies)
+        response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
     return response
        
     
