@@ -12,6 +12,14 @@ import pandas as pd
 from urllib3 import Retry
 from .models import IntradayData
 from datetime import timedelta
+import socket
+from urllib3.connection import HTTPConnection
+
+HTTPConnection.default_socket_options = ( 
+            HTTPConnection.default_socket_options + [
+            (socket.SOL_SOCKET, socket.SO_SNDBUF, 1000000), #1MB in byte
+            (socket.SOL_SOCKET, socket.SO_RCVBUF, 1000000)
+        ])
 
 def home(request):
     IntradayData.objects.filter(time__lte=datetime.datetime.now() - datetime.timedelta(days=1)).delete()
