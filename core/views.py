@@ -39,7 +39,7 @@ url_indices = "https://www.nseindia.com/api/allIndices"
 headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, '
                          'like Gecko) '
                          'Chrome/12.0.0.0 Safari/537.36',
-           'accept-language': 'en;q=0.9, 'accept-encoding': 'gzip, deflate, br'}
+           'accept-language': 'en;q=0.9', 'accept-encoding': 'gzip, deflate, br'}
 sess = requests.Session()
 
 def set_cookie():
