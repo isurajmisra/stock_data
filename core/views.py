@@ -35,7 +35,7 @@ headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 sess = requests.Session()
 
 def set_cookie():
-    request = sess.get(url_oc, headers=headers, timeout=5)
+    request = sess.get(url_oc, headers=headers, timeout=10)
     cookies = dict(request.cookies)
     return cookies
 
@@ -43,9 +43,9 @@ cookies = set_cookie()
 
 def get_option_data(symbol):
     if symbol=="NIFTY":
-        response = sess.get(url_nf, headers=headers, timeout=5, cookies=cookies)
+        response = sess.get(url_nf, headers=headers, timeout=10, cookies=cookies)
     else:
-        response = sess.get(url_bnf, headers=headers, timeout=5, cookies=cookies)
+        response = sess.get(url_bnf, headers=headers, timeout=10, cookies=cookies)
     return response
        
     
