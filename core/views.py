@@ -58,10 +58,9 @@ def get_option_data(symbol):
     return response
        
     
-    
+     
 
 def api_get_data(request):
-
     symbol = request.GET.get('symbol') or "BANKNIFTY"
     print(symbol)
     today = datetime.date.today()
@@ -71,7 +70,7 @@ def api_get_data(request):
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
         if request.META['HTTP_HOST'] != '127.0.0.1:8000':
-            request.META['HTTP_HOST'] = '127.0.0.1:8000'
+            #request.META['HTTP_HOST'] = '127.0.0.1:8000'
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
 
         today9_30am = ti.replace(hour=9, minute=15)
