@@ -50,6 +50,7 @@ def set_cookie():
 
 
 def get_option_data(symbol):
+    print("-------------In get option data fnc-----------------------")
     cookies = set_cookie()
     if symbol=="NIFTY":
         response = sess.get(url_nf, headers=headers, timeout=10, cookies=cookies)
@@ -70,7 +71,7 @@ def api_get_data(request):
     try:
         ti = datetime.datetime.now().strftime("%H:%M")
         if request.META['HTTP_HOST'] != '127.0.0.1:8000':
-            #request.META['HTTP_HOST'] = '127.0.0.1:8000'
+            request.META['HTTP_HOST'] = '127.0.0.1:8000'
             ti = datetime.datetime.now() + timedelta(hours=5, minutes=30)
 
         today9_30am = ti.replace(hour=9, minute=15)
