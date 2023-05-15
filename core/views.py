@@ -48,10 +48,10 @@ def set_cookie():
     return cookies
 
 
-
+cookies = set_cookie()
 def get_option_data(symbol):
     print("-------------In get option data fnc-----------------------")
-    cookies = set_cookie()
+    
     if symbol=="NIFTY":
         response = sess.get(url_nf, headers=headers, timeout=10, cookies=cookies)
     else:
