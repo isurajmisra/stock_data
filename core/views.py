@@ -48,8 +48,9 @@ def set_cookie():
     return cookies
 
 
-cookies = set_cookie()
+
 def get_option_data(symbol):
+    cookies = set_cookie()
     print("-------------In get option data fnc-----------------------")
     
     if symbol=="NIFTY":
