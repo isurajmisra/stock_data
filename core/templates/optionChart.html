@@ -3,26 +3,66 @@
 {% block main %}
 <script>
 $(document).ready(function () {
-$('#button').click(function (e) {
-e.preventDefault();
-        $.ajax({
-                url: '{% url 'api_get_data' %}',
+  $('#symbol').on('change', function() {
+$.ajax({
+                url: '{% url 'strike_price' %}',
                 data: {
-                        "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                        "symbol": this.value,
                        },
                 dataType: 'json',
                 success: function(results){
+                  $("#strike").empty();
+                  $("#strike").append($('<option></option>').attr("value", null).text("Select Your Strike Price"));
+                  $.each(results, function (i, row) {
+                  var option = $('<option></option>').attr("value", row).text(row);
+                  $("#strike").append(option);
+                  })
+                },
+                error: function(results){
+                $("h5#data-loader").text("There is some error occurred.");
+                }
+                });
+});
+$('#button').click(function (e) {
+  var now = new Date(Date.now());
+    var t =  now.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: false })
+    console.log(t);
+e.preventDefault();
+function my_function(){
+        $.ajax({
+                url: '{% url 'api_get_strike_data' %}',
+                data: {
+                        "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                        "strike_price": $('select[name=strike] option').filter(':selected').val(),
+                       },
+                dataType: 'json',
+                success: function(results){
+                  console.log("results:");
                     console.log(results);
                       $("h5#data-loader").text("");
                       $("table tbody#table-row").html("");
+                      $("table tbody#table-ce").empty();
+                      $("table tbody#table-pe").empty();
                       $.each(results, function (i, row) {
-                      $("table tbody#table-row").append(`<tr>
+                      $("table tbody#table-ce").append(`<tr>
                                                               <th scope="row">${i}</th>
-                                                              <td>${row.call}</td>
-                                                              <td>${row.put}</td>
-                                                              <td>${row.diff}</td>
                                                               <td>${row.time}</td>
-                                                              <td>${row.signal}</td>
+                                                              <td>${row.strike}</td>
+                                                              <td>${row.ce_coi}</td>
+                                                              <td>${row.ce_volume}</td>
+                                                              <td>${row.ce_iv}</td>
+                                                              <td>${row.ce_tbq}</td>
+                                                              <td>${row.ce_tsq}</td>
+                                                         </tr>`);
+                        $("table tbody#table-pe").append(`<tr>
+                                                              <th scope="row">${i}</th>
+                                                              <td>${row.time}</td>
+                                                              <td>${row.strike}</td>
+                                                              <td>${row.pe_coi}</td>
+                                                              <td>${row.pe_volume}</td>
+                                                              <td>${row.pe_iv}</td>
+                                                              <td>${row.pe_tbq}</td>
+                                                              <td>${row.pe_tsq}</td>
                                                          </tr>`);});
 
                     },
@@ -31,49 +71,103 @@ e.preventDefault();
                 }
                 });
 
-
+                function sleep(milliseconds) {
+                  const date = Date.now();
+                  let currentDate = null;
+                  do {
+                    currentDate = Date.now();
+                  } while (currentDate - date < milliseconds);
+                }
+                sleep(2000);
 google.charts.load('current', {
             callback: function () {
-            var chart = new google.visualization.LineChart($('#chart').get(0));
+            var ce_volumeChart = new google.visualization.LineChart($('#ce_volumeChart').get(0));
+            var ce_coi_Chart = new google.visualization.LineChart($('#ce_coi_Chart').get(0));
+            var pe_coi_Chart = new google.visualization.LineChart($('#pe_coi_Chart').get(0));
+            var pe_volumeChart = new google.visualization.LineChart($('#pe_volumeChart').get(0));
             function convertDate(date) {
                                 var momentDate = moment(date).format('hh : mm A');
                                 return momentDate;
                         }
             function drawChart() {
               $.ajax({
-                url: '{% url 'get_intraday_data' %}',
+                url: '{% url 'api_get_strike_data' %}',
                         dataType: 'json',
                         data: {
                                  "symbol": $('select[name=symbol] option').filter(':selected').val(),
+                                 "strike_price": $('select[name=strike] option').filter(':selected').val(),
                                 },
                       }).done(function (results) {
                       console.log(results);
-                        var data = new google.visualization.DataTable();
-                        data.addColumn('datetime', 'Time');
-                        data.addColumn('number', 'Difference');
+
+                        var ceVolumeData = new google.visualization.DataTable();
+                        ceVolumeData.addColumn('datetime', 'Time');
+                        ceVolumeData.addColumn('number', 'CE Total Traded Volume');
+
+                        var ceCOIData = new google.visualization.DataTable();
+                        ceCOIData.addColumn('datetime', 'Time');
+                        ceCOIData.addColumn('number', 'CE Change In OI');
+
+                        var peVolumeData = new google.visualization.DataTable();
+                        peVolumeData.addColumn('datetime', 'Time');
+                        peVolumeData.addColumn('number', 'PE Total Traded Volume');
+
+                        var peCOIData = new google.visualization.DataTable();
+                        peCOIData.addColumn('datetime', 'Time');
+                        peCOIData.addColumn('number', 'PE Change In OI');
 
 
                         $.each(results, function (i, row) {
 
-                          data.addRow([
+                          ceVolumeData.addRow([
                              new Date(row.time.slice(0, -1)),
-                            row.diff,
+                             Number(row.ce_volume),
+                          ]);
+                          ceCOIData.addRow([
+                             new Date(row.time.slice(0, -1)),
+                             Number(row.ce_coi),
+                          ]);
 
+                          peVolumeData.addRow([
+                             new Date(row.time.slice(0, -1)),
+                             Number(row.pe_volume),
+                          ]);
+                          peCOIData.addRow([
+                             new Date(row.time.slice(0, -1)),
+                             Number(row.pe_coi),
                           ]);
                         });
-                        var options = {
-                            title    : 'NSE Stock: Index Option Chain Data',
+                        var volumeOptions = {
+                            title    : 'NSE Stock: Index Strike Price Data',
                             width    : 1400,
                             height   : 600,
                             legend   : 'true',
                              pointSize: 2,
-                            vAxis: { title: 'Price Diff (INR)', },
+                            vAxis: { title: 'Total Traded Volume', },
                             hAxis: { title: 'Time of day (Hours:Minutes)', format: 'HH:mm', gridlines: {count:15}, curveType: 'function',
                                     lineWidth: 5,
                                     intervals: { 'style':'line' },}
                                     };
-                            console.log("data---",data);
-                            chart.draw(data, options);
+
+                            var oiOptions = {
+                            title    : 'NSE Stock: Index Strike Price Data',
+                            width    : 1400,
+                            height   : 600,
+                            legend   : 'true',
+                             pointSize: 2,
+                            vAxis: { title: 'Total Change In OI', },
+                            hAxis: { title: 'Time of day (Hours:Minutes)', format: 'HH:mm', gridlines: {count:15}, curveType: 'function',
+                                    lineWidth: 5,
+                                    intervals: { 'style':'line' },}
+                                    };
+
+                            
+
+                            ce_volumeChart.draw(ceVolumeData, volumeOptions);
+                            ce_coi_Chart.draw(ceCOIData, oiOptions);
+                            pe_volumeChart.draw(peVolumeData, volumeOptions);
+                            pe_coi_Chart.draw(peCOIData, oiOptions);
+
                             });
                         }
 
@@ -84,39 +178,85 @@ google.charts.load('current', {
                   },
                   packages: ['corechart']
                 });
-   });
+              };
+                if(t>"09:15" && t<"15:30"){
+
+my_function();
+
+setInterval(my_function,100000);
+}
+else{
+  my_function();
+}
+
+
+});
+ 
 });
 
 </script>
 <div class="container">
      <form id="symbol-select" class="form-inline">
             <div  class="form-group">
-                <label for="symbol">Select Your Index Symbol :</label>
+                <label for="symbol">Symbol :</label>
 
                 <select id="symbol" class="custom-select ml-2" name="symbol">
-                    <option value="BANKNIFTY" selected>BANKNIFTY</option>
-                    <option value="NIFTY">NIFTY</option>
+                    <option value="BANKNIFTY" >BANKNIFTY</option>
+                    <option value="NIFTY" selected>NIFTY</option>
                 </select>
             </div>
+            <br>
+            <div  class="form-group">
+              <label for="strike">Strike Price :</label>
+
+              <select id="strike" class="custom-select ml-2" name="strike">
+                  <option selected>Select Your Strike Price :</option>
+                  {% for strike in strike_price_list %}  
+                <option value={{strike}}>{{strike}}</option>
+                {% endfor %}
+              </select>
+          </div>
 
             <button type="submit" id="button"  class="btn btn-primary ml-2">Submit</button>
-        </form>s
+        </form>
     <br>
         <table class="table">
           <thead>
             <tr>
-                <th>#</th>
-                <th>CE</th>
-                <th>PE</th>
-                <th>Diff</th>
-                <th>Time</th>
-                <th>Signal</th>
+              <th>#</th>
+              <th>Time</th>
+              <th>Strike</th>
+              <th>CE Ch. OI</th>
+              <th>CE Volume</th>
+              <th>CE IV</th>
+              <th>CE Total Buy Quantity</th>
+              <th>CE Total Sell Quantity</th>
             </tr>
           </thead>
-          <tbody id="table-row">
+          <tbody id="table-ce">
+          </tbody>
+        </table>
+        <br>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Time</th>
+              <th>Strike</th>
+              <th>PE Ch. OI</th>
+              <th>PE Volume</th>
+              <th>PE IV</th>
+              <th>PE Total Buy Quantity</th>
+              <th>PE Total Sell Quantity</th>
+            </tr>
+          </thead>
+          <tbody id="table-pe">
           </tbody>
         </table>
 </div>
     <br>
-<div id="chart" ></div>
+<div id="ce_volumeChart" ></div>
+<div id="ce_coi_Chart" ></div>
+<div id="pe_volumeChart" ></div>
+<div id="pe_coi_Chart" ></div>
 {% endblock %}
